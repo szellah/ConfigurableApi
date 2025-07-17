@@ -1,6 +1,8 @@
 @ConfigurablePdfApi_HostAddress = http://localhost:5108
 
-GET {{ConfigurablePdfApi_HostAddress}}/weatherforecast/
+### Generowanie z Html
+POST {{PdfApi_HostAddress}}/generate
 Accept: application/json
+Content-Type: application/json
 
-###
+{ "Html" : "Hello world!" }
