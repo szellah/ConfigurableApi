@@ -1,8 +1,8 @@
 @ConfigurablePdfApi_HostAddress = http://localhost:5108
 
 ### Generowanie z Html
-POST {{PdfApi_HostAddress}}/generate
+POST {{ConfigurablePdfApi_HostAddress}}/generate
 Accept: application/json
 Content-Type: application/json
 
-{ "Html" : "Hello world!" }
+{ "Html" : "<html><body><h1>Hello World!</h1></body></html>" }
