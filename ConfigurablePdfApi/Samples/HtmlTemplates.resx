@@ -1,0 +1,202 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+        <xsd:element name="root" msdata:IsDataSet="true">
+            
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+    </resheader>
+    <data name="InvoiceTemplate" xml:space="preserve">
+        <value>&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;Invoice #0001&lt;/title&gt;
+  &lt;style&gt;
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+    }
+
+    .invoice-box {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 30px;
+      border: 1px solid #eee;
+      background: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, .15);
+    }
+
+    .invoice-box table {
+      width: 100%;
+      line-height: inherit;
+      text-align: left;
+      border-collapse: collapse;
+    }
+
+    .invoice-box table td {
+      padding: 5px;
+      vertical-align: top;
+    }
+
+    .invoice-box table tr td:nth-child(2) {
+      text-align: right;
+    }
+
+    .invoice-box table tr.top table td {
+      padding-bottom: 20px;
+    }
+
+    .invoice-box table tr.information table td {
+      padding-bottom: 40px;
+    }
+
+    .invoice-box table tr.heading td {
+      background: #eee;
+      border-bottom: 1px solid #ddd;
+      font-weight: bold;
+    }
+
+    .invoice-box table tr.item td {
+      border-bottom: 1px solid #eee;
+    }
+
+    .invoice-box table tr.item.last td {
+      border-bottom: none;
+    }
+
+    .invoice-box table tr.total td:nth-child(2) {
+      border-top: 2px solid #eee;
+      font-weight: bold;
+    }
+    
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class="invoice-box"&gt;
+    &lt;table cellpadding="0" cellspacing="0"&gt;
+      &lt;tr class="top"&gt;
+        &lt;td colspan="2"&gt;
+          &lt;table&gt;
+            &lt;tr&gt;
+              &lt;td class="title"&gt;
+                &lt;h2&gt;ACME Corp&lt;/h2&gt;
+              &lt;/td&gt;
+
+              &lt;td&gt;
+                Invoice #: 0001&lt;br&gt;
+                Created: July 2, 2025&lt;br&gt;
+                Due: July 16, 2025
+              &lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/table&gt;
+        &lt;/td&gt;
+      &lt;/tr&gt;
+
+      &lt;tr class="information"&gt;
+        &lt;td colspan="2"&gt;
+          &lt;table&gt;
+            &lt;tr&gt;
+              &lt;td&gt;
+                ACME Corp.&lt;br&gt;
+                12345 Sunny Road&lt;br&gt;
+                Sunnyville, TX 12345
+              &lt;/td&gt;
+
+              &lt;td&gt;
+                Client Co.&lt;br&gt;
+                John Doe&lt;br&gt;
+                john@example.com
+              &lt;/td&gt;
+            &lt;/tr&gt;
+          &lt;/table&gt;
+        &lt;/td&gt;
+      &lt;/tr&gt;
+
+      &lt;tr class="heading"&gt;
+        &lt;td&gt;
+          Payment Method
+        &lt;/td&gt;
+
+        &lt;td&gt;
+          Check #
+        &lt;/td&gt;
+      &lt;/tr&gt;
+
+      &lt;tr class="details"&gt;
+        &lt;td&gt;
+          Check
+        &lt;/td&gt;
+
+        &lt;td&gt;
+          1000
+        &lt;/td&gt;
+      &lt;/tr&gt;
+
+      &lt;tr class="heading"&gt;
+        &lt;td&gt;
+          Item
+        &lt;/td&gt;
+
+        &lt;td&gt;
+          Price
+        &lt;/td&gt;
+      &lt;/tr&gt;
+
+      &lt;tr class="item"&gt;
+        &lt;td&gt;
+          Website design (10 hrs)
+        &lt;/td&gt;
+
+        &lt;td&gt;
+          $300.00
+        &lt;/td&gt;
+      &lt;/tr&gt;
+
+      &lt;tr class="item"&gt;
+        &lt;td&gt;
+          Hosting (3 months)
+        &lt;/td&gt;
+
+        &lt;td&gt;
+          $75.00
+        &lt;/td&gt;
+      &lt;/tr&gt;
+
+      &lt;tr class="item last"&gt;
+        &lt;td&gt;
+          Domain (1 year)
+        &lt;/td&gt;
+
+        &lt;td&gt;
+          $10.00
+        &lt;/td&gt;
+      &lt;/tr&gt;
+
+      &lt;tr class="total"&gt;
+        &lt;td&gt;&lt;/td&gt;
+
+        &lt;td&gt;
+          Total: $385.00
+        &lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/table&gt;
+    &lt;p style="margin-top:20px;font-size:12px;"&gt;Thank you for your business!&lt;/p&gt;
+  &lt;/div&gt;
+&lt;/body&gt;
+&lt;/html&gt;</value>
+    </data>
+</root>
