@@ -11,7 +11,7 @@ public class PlaywrightPDFService(
     
     public async Task<byte[]> GeneratePDF(string html)
     {
-        // Microsoft.Playwright.Program.Main(["install"]);
+        Microsoft.Playwright.Program.Main(["install"]);
         // return;
 
         await using var htmlRenderer = new HtmlRenderer(serviceProvider, loggerFactory);

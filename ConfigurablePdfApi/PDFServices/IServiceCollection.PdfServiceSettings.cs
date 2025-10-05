@@ -15,6 +15,7 @@ public static partial class IServiceCollection_PdfServiceSettings
     {
         options.WithParsed(o =>
         {
+            Console.WriteLine($"Now using {o.Pdf}");
             switch (o.Pdf)
             {
                 case PdfImplementation.Cef:

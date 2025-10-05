@@ -36,8 +36,6 @@ public class Program
         {
             Console.WriteLine(model.Html);
             
-            // TODO: Validation?
-            
             var file = pdfService.GeneratePDF(model.Html);
             return file;
         });
