@@ -8,7 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="CefGlue.Common" Version="120.6099.211" />
+        <PackageReference Include="CefSharp.OffScreen.NETCore" Version="137.0.100" />
         <PackageReference Include="CommandLineParser" Version="2.9.1" />
         <PackageReference Include="Gotenberg.Sharp.API.Client" Version="2.8.0" />
         <PackageReference Include="HtmlAgilityPack" Version="1.12.1" />
