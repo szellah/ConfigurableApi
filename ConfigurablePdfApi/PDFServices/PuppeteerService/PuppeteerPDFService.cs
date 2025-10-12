@@ -6,11 +6,15 @@ namespace ConfigurablePdfApi.PDFServices.PuppeteerService;
 
 public class PuppeteerPdfService : IPDFService
 {
+    private static IBrowser? _browser;
     public async Task<byte[]> GeneratePDF(string html)
     {
-        await new BrowserFetcher().DownloadAsync();
-        await using var browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true });
-        var page = await browser.NewPageAsync();
+        if (_browser is null)
+            await InitPuppeteerAsync();
+
+        if (_browser is null) throw new Exception();
+        
+        var page = await _browser.NewPageAsync();
         await page.SetContentAsync(html);
         
         var pdfBytes = await page.PdfDataAsync(new PdfOptions
@@ -18,6 +22,14 @@ public class PuppeteerPdfService : IPDFService
             Format = PaperFormat.A4
         });
         
+        await page.CloseAsync();
+        
         return pdfBytes; 
+    }
+    
+    static async Task InitPuppeteerAsync()
+    {
+        await new BrowserFetcher().DownloadAsync();
+        _browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true });
     }
 }

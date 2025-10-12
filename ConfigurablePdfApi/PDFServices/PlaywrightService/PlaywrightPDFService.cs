@@ -16,7 +16,7 @@ public class PlaywrightPDFService : IPDFService
         if (_browser is null)
             await InitPlaywrightAsync();
 
-        if (_browser is null) return [];
+        if (_browser is null) throw new Exception();
         
         var page = await _browser.NewPageAsync();
         await page.SetContentAsync(html);
