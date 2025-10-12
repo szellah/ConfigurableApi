@@ -34,7 +34,7 @@ public class Program
 
         app.MapPost("/generate", (PdfGenerateModel model, IPDFService pdfService) =>
         {
-            Console.WriteLine(model.Html);
+            Console.WriteLine("recived html");
             
             var file = pdfService.GeneratePDF(model.Html);
             return file;

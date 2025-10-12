@@ -1,35 +1,48 @@
 ﻿using ConfigurablePdfApi.PDFServices.Interfaces;
 using PuppeteerSharp;
 using PuppeteerSharp.Media;
+using System.Threading;
 
 namespace ConfigurablePdfApi.PDFServices.PuppeteerService;
 
-public class PuppeteerPdfService : IPDFService
+public class PuppeteerPdfService : IPDFService, IAsyncDisposable
 {
     private static IBrowser? _browser;
+    private static readonly SemaphoreSlim _semaphore = new(5); // limit concurrent renders
+
+    public PuppeteerPdfService()
+    {
+        _browser = Puppeteer.LaunchAsync(new LaunchOptions
+        {
+            Headless = true, Args = ["--no-sandbox", "--disable-setuid-sandbox"]
+        }).GetAwaiter().GetResult();   
+    }
+
     public async Task<byte[]> GeneratePDF(string html)
     {
-        if (_browser is null)
-            await InitPuppeteerAsync();
+        if (_browser == null)
+            throw new InvalidOperationException("Browser not initialized");
 
-        if (_browser is null) throw new Exception();
-        
-        var page = await _browser.NewPageAsync();
-        await page.SetContentAsync(html);
-        
-        var pdfBytes = await page.PdfDataAsync(new PdfOptions
+        await _semaphore.WaitAsync(); // prevent overload
+        try
         {
-            Format = PaperFormat.A4
-        });
-        
-        await page.CloseAsync();
-        
-        return pdfBytes; 
+            await using var page = await _browser.NewPageAsync();
+            await page.SetContentAsync(html);
+
+            return await page.PdfDataAsync(new PdfOptions
+            {
+                Format = PaperFormat.A4
+            });
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
     }
-    
-    static async Task InitPuppeteerAsync()
+
+    public async ValueTask DisposeAsync()
     {
-        await new BrowserFetcher().DownloadAsync();
-        _browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true });
+        if (_browser != null)
+            await _browser.CloseAsync();
     }
 }
