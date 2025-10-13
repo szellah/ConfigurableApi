@@ -5,23 +5,55 @@ using OpenQA.Selenium.Chrome;
 
 namespace ConfigurablePdfApi.PDFServices.SeleniumService;
 
-public class SeleniumPDFService : IPDFService
+public class SeleniumPDFService : IPDFService, IDisposable
 {
-    public Task<byte[]> GeneratePDF(string html)
+    private readonly ChromeDriver _driver;
+    private readonly SemaphoreSlim _semaphore = new(5);
+
+    public SeleniumPDFService()
+    {
+        _driver = InitializeChromeDriver();
+    }
+
+    private ChromeDriver InitializeChromeDriver()
     {
         var options = new ChromeOptions();
-        options.AddArgument("--headless");
-        using var driver = new ChromeDriver(options);
-        var htmlBs64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(html));
-        driver.Url = $"data:text/html;base64,{htmlBs64}";
+
+        // Headless mode & stability options
+        options.AddArgument("--headless=new");
+        options.AddArgument("--disable-gpu");
+        options.AddArgument("--no-sandbox");
+        options.AddArgument("--disable-dev-shm-usage");
         
-        var file = driver.Print(new PrintOptions
+        return new ChromeDriver(options);
+    }
+
+    public async Task<byte[]> GeneratePDF(string html)
+    {
+        await _semaphore.WaitAsync();
+        try
         {
-            PageDimensions = PrintOptions.PageSize.A4,
-       });
-        
-        driver.Quit();
-         
-        return Task.FromResult(file.AsByteArray); 
+            // Create a data URL to render HTML
+            var htmlBase64 = Convert.ToBase64String(Encoding.UTF8.GetBytes(html));
+            _driver.Url = $"data:text/html;base64,{htmlBase64}";
+
+            var printOptions = new PrintOptions
+            {
+                PageDimensions = PrintOptions.PageSize.A4,
+            };
+
+            var file = _driver.Print(printOptions);
+            return file.AsByteArray;
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
+    }
+
+    public void Dispose()
+    {
+        _driver.Quit();
+        _driver.Dispose();
     }
 }
