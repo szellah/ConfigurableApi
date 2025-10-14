@@ -4,35 +4,72 @@ using ConfigurablePdfApi.PDFServices.Interfaces;
 
 namespace ConfigurablePdfApi.PDFServices.CefService;
 
-public class CefPDFService : IPDFService
+public class CefPDFService : IPDFService, IDisposable
 {
-    public async Task<byte[]> GeneratePDF(string html)
+    private readonly SemaphoreSlim _semaphore = new(5); // Limit concurrent prints
+    private bool _initialized;
+
+    public CefPDFService()
     {
-        var browser = new ChromiumWebBrowser();
-        
-        var tcs = new TaskCompletionSource<bool>();
-        
-        EventHandler<LoadingStateChangedEventArgs>? handler = null;
-        handler = (_, args) =>
+        InitializeCef();
+    }
+
+    private void InitializeCef()
+    {
+        if (_initialized)
+            return;
+
+        var settings = new CefSettings
         {
-            if (args.IsLoading) return;
-            browser.LoadingStateChanged -= handler;
-            tcs.TrySetResult(true);
+            WindowlessRenderingEnabled = true,
+            LogSeverity = LogSeverity.Disable
         };
 
-        browser.LoadingStateChanged += handler;
-        
-        browser.LoadHtml(html);
+        if (!(Cef.IsInitialized ?? false))
+            Cef.Initialize(settings, performDependencyCheck: true, browserProcessHandler: null);
 
-        await tcs.Task;
+        _initialized = true;
+    }
 
-        var filePath = $"{Path.GetTempPath()}{Guid.NewGuid().ToString()}.pdf";
-        
-        await browser.PrintToPdfAsync(filePath);
+    public async Task<byte[]> GeneratePDF(string html)
+    {
+        await _semaphore.WaitAsync();
+        try
+        {
+            using var browser = new ChromiumWebBrowser();
 
-        var pdfBytes = await File.ReadAllBytesAsync(filePath);
-        File.Delete(filePath);
-        
-        return pdfBytes; 
+            var tcs = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
+
+            EventHandler<LoadingStateChangedEventArgs>? handler = null;
+            handler = (_, args) =>
+            {
+                if (args.IsLoading) return;
+                browser.LoadingStateChanged -= handler;
+                tcs.TrySetResult(true);
+            };
+
+            browser.LoadingStateChanged += handler;
+            browser.LoadHtml(html);
+
+            await tcs.Task.ConfigureAwait(false);
+
+            var filePath = Path.Combine(Path.GetTempPath(), $"{Guid.NewGuid()}.pdf");
+            await browser.PrintToPdfAsync(filePath);
+
+            var pdfBytes = await File.ReadAllBytesAsync(filePath);
+            File.Delete(filePath);
+
+            return pdfBytes;
+        }
+        finally
+        {
+            _semaphore.Release();
+        }
+    }
+
+    public void Dispose()
+    {
+        if (Cef.IsInitialized ?? false)
+            Cef.Shutdown();
     }
 }
