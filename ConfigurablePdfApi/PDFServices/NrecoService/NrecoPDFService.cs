@@ -5,23 +5,23 @@ namespace ConfigurablePdfApi.PDFServices.NrecoService;
 
 public class NrecoPDFService : IPDFService
 {
-    private readonly HtmlToPdfConverter _converter;
+    private readonly string _licenseKey;
 
-    public NrecoPDFService(IConfiguration configuration)
+    public NrecoPDFService()
     {
         var licenseKey = Environment.GetEnvironmentVariable("NRECO_PDF_LICENSE_KEY");
 
-        _converter = new HtmlToPdfConverter();
-
         if (!string.IsNullOrWhiteSpace(licenseKey))
-            _converter.License.SetLicenseKey("DEMO", licenseKey);
+            _licenseKey = licenseKey;
         else
             throw new Exception("No licence key");
     }
 
     public Task<byte[]> GeneratePDF(string html)
     {
-        var pdfBytes = _converter.GeneratePdf(html);
+        var converter = new HtmlToPdfConverter();
+        converter.License.SetLicenseKey("DEMO", _licenseKey);
+        var pdfBytes = converter.GeneratePdf(html);
         return Task.FromResult(pdfBytes);
     }
 }
