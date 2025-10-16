@@ -17,7 +17,7 @@
         <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.6" />
         <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.6" />
         <PackageReference Include="Microsoft.Playwright" Version="1.53.0" />
-        <PackageReference Include="NReco.PdfGenerator" Version="1.2.1" />
+        <PackageReference Include="NReco.PdfGenerator.LT" Version="1.2.1" />
         <PackageReference Include="PuppeteerSharp" Version="20.2.0" />
         <PackageReference Include="Selenium.WebDriver" Version="4.34.0" />
         <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.7" />
